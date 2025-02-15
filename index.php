@@ -2,7 +2,7 @@
 
 require_once 'VcmpQueryAPI.php'; // Include the VCMP query class
 
-$query = new VcmpQueryAPI('192.168.4.1', 8192);
+$query = new VcmpQueryAPI('57.129.44.185', 8192);
 
 if ($query->connect()) {
     $info = $query->getInfo();
