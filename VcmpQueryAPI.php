@@ -100,21 +100,24 @@ class VcmpQueryAPI
     {
         @fwrite($this->rSocket, $this->createPacket('i'));
         
-        fread($this->rSocket, 11);
-    
-        $aDetails['password'] = (integer) ord(fread($this->rSocket, 1));
+        fread($this->rSocket, 11); // Read the header
+
+        $aDetails['password'] = (integer) ord(fread($this->rSocket, 1)); // Password protected?
         
-        $aDetails['players'] = (integer) $this->toInteger(fread($this->rSocket, 2));
+        $aDetails['players'] = (integer) $this->toInteger(fread($this->rSocket, 2)); // Player count
         
-        $aDetails['maxplayers'] = (integer) $this->toInteger(fread($this->rSocket, 2));
+        $aDetails['maxplayers'] = (integer) $this->toInteger(fread($this->rSocket, 2)); // Max players
         
-        $iStrlen = ord(fread($this->rSocket, 4));
+        $iStrlen = ord(fread($this->rSocket, 4)); // Hostname length
         if(!$iStrlen) return -1;
         
-        $aDetails['hostname'] = (string) fread($this->rSocket, $iStrlen);
+        $aDetails['hostname'] = (string) fread($this->rSocket, $iStrlen); // Hostname
         
-        $iStrlen = ord(fread($this->rSocket, 4));
-        $aDetails['gamemode'] = (string) fread($this->rSocket, $iStrlen);
+        $iStrlen = ord(fread($this->rSocket, 4)); // Gamemode length
+        $aDetails['gamemode'] = (string) fread($this->rSocket, $iStrlen); // Gamemode
+        
+        $iStrlen = ord(fread($this->rSocket, 4)); // Version length
+        $aDetails['version'] = (string) fread($this->rSocket, $iStrlen); // Server version
         
         return $aDetails;
     }
