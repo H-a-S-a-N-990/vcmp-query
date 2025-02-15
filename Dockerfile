@@ -1,18 +1,17 @@
-# Use an official PHP image as the base image
-FROM php:8.2-cli
+# Use an official PHP-Apache image
+FROM php:8.1-apache
 
-# Set the working directory inside the container
-WORKDIR /app
+# Enable required PHP extensions
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Copy the PHP script into the container
-COPY . /app
+# Copy project files to the container
+COPY . /var/www/html/
 
-# Install necessary dependencies (fsockopen is already enabled in PHP CLI)
-# If you need additional extensions, install them here
-RUN docker-php-ext-install sockets
+# Set working directory
+WORKDIR /var/www/html
 
-# Expose port 80 (or any other port you want to use)
+# Expose port 80 for web traffic
 EXPOSE 80
 
-# Command to run the PHP script
-CMD ["php", "-S", "0.0.0.0:80"]
+# Start Apache
+CMD ["apache2-foreground"]
