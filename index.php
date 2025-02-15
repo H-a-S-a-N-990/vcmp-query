@@ -1,43 +1,19 @@
 <?php
-// Include the VcmpQueryAPI class
-require_once 'VcmpQueryAPI.php';
 
-// Set the content type to JSON
-header('Content-Type: application/json');
+require_once 'VcmpQueryAPI.php'; // Include the VCMP query class
 
-// Get query parameters from the URL
-$sServer = $_GET['server'] ?? '127.0.0.1'; // Default server IP
-$iPort = $_GET['port'] ?? 8192; // Default server port
+$query = new VcmpQueryAPI('192.168.4.1', 8192);
 
-// Create an instance of the VcmpQueryAPI class
-$oQuery = new VcmpQueryAPI($sServer, $iPort);
+if ($query->connect()) {
+    $info = $query->getInfo();
+    $players = $query->getPlayers();
 
-// Check if the server is online
-if ($oQuery->isOnline()) {
-    // Get server information
-    $aInfo = $oQuery->getInfo();
-    
-    // Get player list (basic or detailed)
-    $aPlayers = $oQuery->getBasicPlayers(); // Use getDetailedPlayers() for more details
-    
-    // Prepare the response
-    $aResponse = [
-        'status' => 'online',
-        'server' => [
-            'ip' => $sServer,
-            'port' => $iPort,
-        ],
-        'info' => $aInfo,
-        'players' => $aPlayers,
-    ];
+    echo "<pre>";
+    print_r($info);
+    print_r($players);
+    echo "</pre>";
 } else {
-    // Server is offline or unreachable
-    $aResponse = [
-        'status' => 'offline',
-        'message' => 'The server is offline or unreachable.',
-    ];
+    echo "Failed to connect to the VCMP server.";
 }
 
-// Output the response as JSON
-echo json_encode($aResponse, JSON_PRETTY_PRINT);
 ?>
