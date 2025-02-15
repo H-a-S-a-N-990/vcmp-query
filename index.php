@@ -1,16 +1,22 @@
 <?php
+// Include the Server class (if it's in a separate file, adjust the path)
+require_once 'Server.php';
 
-require_once 'VcmpQueryAPI.php';  // Make sure this file exists
+// Create a new instance of the Server class with the IP and port
+$server = new Server("57.129.44.185", 8192);
 
-$ip = '57.129.44.185';
-$port = 8192;
+// Refresh the server information and player list
+$server->Refresh();
 
-$query = new VcmpQueryAPI($ip, $port);
-$data = $query->getInfo();  // Use getInfo() instead of connect()
-
-if ($data) {
-    print_r($data);
+// Output the server details
+if ($server->success) {
+    echo "Server Name: " . $server->name . "<br>";
+    echo "Version: " . $server->version . "<br>";
+    echo "Passworded: " . ($server->passworded ? "Yes" : "No") . "<br>";
+    echo "Players: " . $server->players . "/" . $server->max_players . "<br>";
+    echo "Player List: <br>";
+    print_r($server->player_list); // Display the player list
 } else {
-    echo "Failed to connect to the VCMP server.";
+    echo "Failed to retrieve server information.";
 }
 ?>
